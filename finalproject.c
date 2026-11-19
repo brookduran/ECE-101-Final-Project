@@ -72,9 +72,9 @@
             a symbol for "investigated but empty" cell - O
 
         1D array for treasure
-            I think I'm gonna have it such that 
-            [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-            [G,G,S,S,S,A,A,A,A,D, D, D, D, T, T, T]
+            
+			[0,1,2,3,4,5,6]
+			[G,S,A,D,T,T,T]
 
             I think I'll also have one full treasure array
             and one "discovered" treasure array
@@ -148,49 +148,65 @@
           |---------------------------------------|
         0 | . | . | . | . | . | . | . | . | . | . |
           |---------------------------------------|
-        1 | . | . | . | . | . | . | . | . | . | . |
+        1 | . | . | . | . | . | . | . | T | . | . |
           |---------------------------------------|
         2 | . | . | . | . | . | . | . | . | . | . |
           |---------------------------------------|
-        3 | . | . | . | . | . | . | . | . | . | . |
+        3 | . | T | S | S | S | . | . | . | . | . |
           |---------------------------------------|
         4 | . | . | . | . | . | . | . | . | . | . |
           |---------------------------------------|
-        5 | . | . | . | . | . | . | . | . | . | . |
+        5 | . | . | . | . | . | T | . | . | . | . |
           |---------------------------------------|
-        6 | . | . | . | . | . | . | . | . | . | . |
+        6 | . | G | . | . | . | D | . | . | . | . |
           |---------------------------------------|
-        7 | . | . | . | . | . | . | . | . | . | . |
+        7 | . | G | . | . | . | D | . | . | . | . |
           |---------------------------------------|
-        8 | . | . | . | . | . | . | . | . | . | . |
+        8 | . | . | . | . | . | D | A | A | A | A |
           |---------------------------------------|
-        9 | . | . | . | . | . | . | . | . | . | . |
+        9 | . | . | . | . | . | D | . | . | . | . |
           |---------------------------------------|
+
+		- Golden Idol (G) are at cell (6,1) and (7,1)
+        - Silver Chest (S) are at cell (3,2), (3,3), (3,4)
+        - Ancient Artifact (A) are at cell (8,6), (8,7), (8,8), (8,9)
+        - Diamond Vault (D) are at cell (6,5), (7,5), (8,5), (9,5)
+        - Trap (T) is at cell (3,1)
+        - Trap (T) is at cell (1,7)
+        - Trap (T) is at cell (5,5)
 
         !!TO MAKE!! Map 3
 
             0   1   2   3   4   5   6   7   8   9
           |---------------------------------------|
-        0 | . | . | . | . | . | . | . | . | . | . |
+        0 | . | . | . | . | . | . | . | . | . | G |
           |---------------------------------------|
-        1 | . | . | . | . | . | . | . | . | . | . |
+        1 | . | . | . | . | . | . | . | . | . | G |
           |---------------------------------------|
-        2 | . | . | . | . | . | . | . | . | . | . |
+        2 | . | T | . | D | D | D | D | . | . | . |
           |---------------------------------------|
-        3 | . | . | . | . | . | . | . | . | . | . |
+        3 | . | . | . | . | . | . | . | . | T | . |
           |---------------------------------------|
         4 | . | . | . | . | . | . | . | . | . | . |
           |---------------------------------------|
-        5 | . | . | . | . | . | . | . | . | . | . |
+        5 | . | S | . | . | . | . | . | . | . | . |
           |---------------------------------------|
-        6 | . | . | . | . | . | . | . | . | . | . |
+        6 | . | S | . | . | . | A | . | . | . | . |
           |---------------------------------------|
-        7 | . | . | . | . | . | . | . | . | . | . |
+        7 | . | S | . | . | . | A | . | . | . | . |
           |---------------------------------------|
-        8 | . | . | . | . | . | . | . | . | . | . |
+        8 | . | . | . | . | T | A | . | . | . | . |
           |---------------------------------------|
-        9 | . | . | . | . | . | . | . | . | . | . |
+        9 | . | . | . | . | . | A | . | . | . | . |
           |---------------------------------------|
+
+		- Golden Idol (G) are at cell (0,9) and (1,9)
+        - Silver Chest (S) are at cell (5,1), (6,1), (7,1)
+        - Ancient Artifact (A) are at cell (6,5), (7,5), (8,5), (9,5)
+        - Diamond Vault (D) are at cell (2,3), (2,4), (2,5), (2,6)
+        - Trap (T) is at cell (8,4)
+        - Trap (T) is at cell (2,1)
+        - Trap (T) is at cell (3,8)
 
         treasure:
             Treasure must occupy consecutive cells | or - but not / or \
@@ -282,6 +298,7 @@ void discover_coordinate ();
 void activate_trap ();
 void activate_treasure ();
 void activate_hint ();
+void activate_empty();
 
 int main(void) {
 
@@ -478,158 +495,303 @@ void generate_map (int num, Treasure* map[10][10], Treasure* all_treasures[16]){
 
 			for (int j = 0; j < 10; j ++){
 
-				*map[i][j]->name = "Empty";
-				map[i][j]->symbol = '.'; // empty
-				*map[i][j]->row = i;
-				*map[i][j]->col = j;
-				map[i][j]->value = 0;
+				// *map[i][j]->name = "Empty";
+				// map[i][j]->symbol = '.'; // empty
+				// *map[i][j]->row = i;
+				// *map[i][j]->col = j;
+				// map[i][j]->value = 0;
 
 			}
 
 		}
 		/*
-		[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-		[G,G,S,S,S,A,A,A,A,D, D, D, D, D, T, T, T]
+		[0,1,2,3,4,5,6]
+		[G,S,A,D,T,T,T]
 		*/
 
 		*all_treasures[0]->name = "Golden Idol";
-		*all_treasures[0]->row = 1; //G
-		*all_treasures[0]->col = 2;
+		all_treasures[0]->row[0] = 1; //G
+		all_treasures[0]->col[0] = 2;
+		all_treasures[0]->row[1] = 1;
+		all_treasures[0]->col[1] = 3;
 		all_treasures[0]->symbol = 'G';
 		all_treasures[0]->value = 100;
 		all_treasures[0]->size = 2;
 
+		*all_treasures[1]->name = "Silver Chest";
+		all_treasures[1]->row[0] = 4; //S
+		all_treasures[1]->col[0] = 2;
+		all_treasures[1]->row[1] = 5;
+		all_treasures[1]->col[1] = 2;
+		all_treasures[1]->row[2] = 6;
+		all_treasures[1]->col[2] = 2;
+		all_treasures[1]->symbol = 'S';
+		all_treasures[1]->value = 150;
+		all_treasures[1]->size = 3;
 
-		*all_treasures[1]->name = "Golden Idol";
-		*all_treasures[1]->row = 1; //G
-		*all_treasures[1]->col = 3;
-		all_treasures[1]->symbol = 'G';
-		all_treasures[1]->value = 100;
-		all_treasures[1]->size = 2;
+		*all_treasures[2]->name = "Ancient Artifact";
+		all_treasures[2]->row[0] = 2; //A
+		all_treasures[2]->col[0] = 7;
+		all_treasures[2]->row[1] = 3;
+		all_treasures[2]->col[1] = 7;
+		all_treasures[2]->row[2] = 4;
+		all_treasures[2]->col[2] = 7;
+		all_treasures[2]->row[3] = 5;
+		all_treasures[2]->col[3] = 7;
+		all_treasures[2]->symbol = 'A';
+		all_treasures[2]->value = 200;
+		all_treasures[2]->size = 4;
 
-		*all_treasures[2]->name = "Silver Chest";
-		*all_treasures[2]->row = 4; //S
-		*all_treasures[2]->col = 2;
-		all_treasures[2]->symbol = 'S';
-		all_treasures[2]->value = 150;
-		all_treasures[2]->size = 3;
+		*all_treasures[3]->name = "Diamond Vault";
+		all_treasures[3]->row[0] = 8; //D
+		all_treasures[3]->col[0] = 3;
+		all_treasures[3]->row[1] = 8;
+		all_treasures[3]->col[1] = 4;
+		all_treasures[3]->row[2] = 8;
+		all_treasures[3]->col[2] = 5;
+		all_treasures[3]->row[3] = 8;
+		all_treasures[3]->col[3] = 6;
+		all_treasures[3]->symbol = 'D';
+		all_treasures[3]->value = 200;
+		all_treasures[3]->size = 4;
 
-		*all_treasures[3]->name = "Silver Chest";
-		*all_treasures[3]->row = 5; //S
-		*all_treasures[3]->col = 2;
-		all_treasures[3]->symbol = 'S';
-		all_treasures[3]->value = 150;
-		all_treasures[3]->size = 3;
+		*all_treasures[4]->name = "Trap";
+		all_treasures[4]->row[0] = 1; //T
+		all_treasures[4]->col[0] = 6;
+		all_treasures[4]->symbol = 'T';
+		all_treasures[4]->value = -50;
+		all_treasures[4]->size = 1;
 
-		*all_treasures[4]->name = "Silver Chest";
-		*all_treasures[4]->row = 6; //S
-		*all_treasures[4]->col = 2;
-		all_treasures[4]->symbol = 'S';
-		all_treasures[4]->value = 150;
-		all_treasures[4]->size = 3;
+		*all_treasures[5]->name = "Trap";
+		all_treasures[5]->row[0] = 3; //T
+		all_treasures[5]->col[0] = 1;
+		all_treasures[5]->symbol = 'T';
+		all_treasures[5]->value = -50;
+		all_treasures[5]->size = 1;
 
-		*all_treasures[5]->name = "Ancient Artifact";
-		*all_treasures[5]->row = 2; //A
-		*all_treasures[5]->col = 7;
-		all_treasures[5]->symbol = 'A';
-		all_treasures[5]->value = 200;
-		all_treasures[5]->size = 4;
-
-		*all_treasures[6]->name = "Ancient Artifact";
-		*all_treasures[6]->row = 3; //A
-		*all_treasures[6]->col = 7;
-		all_treasures[6]->symbol = 'A';
-		all_treasures[6]->value = 200;
-		all_treasures[6]->size = 4;
-
-		*all_treasures[7]->name = "Ancient Artifact";
-		*all_treasures[7]->row = 4; //A
-		*all_treasures[7]->col = 7;
-		all_treasures[7]->symbol = 'A';
-		all_treasures[7]->value = 200;
-		all_treasures[7]->size = 4;
-
-		*all_treasures[8]->name = "Ancient Artifact";
-		*all_treasures[8]->row = 5; //A
-		*all_treasures[8]->col = 7;
-		all_treasures[8]->symbol = 'A';
-		all_treasures[8]->value = 200;
-		all_treasures[8]->size = 4;
-
-		*all_treasures[9]->name = "Diamond Vault";
-		*all_treasures[9]->row = 8; //D
-		*all_treasures[9]->col = 3;
-		all_treasures[9]->symbol = 'D';
-		all_treasures[9]->value = 200;
-		all_treasures[9]->size = 4;
-
-		*all_treasures[10]->name = "Diamond Vault";
-		*all_treasures[10]->row = 8; //D
-		*all_treasures[10]->col = 4;
-		all_treasures[10]->symbol = 'D';
-		all_treasures[10]->value = 200;
-		all_treasures[10]->size = 4;
-
-		*all_treasures[11]->name = "Diamond Vault";
-		*all_treasures[11]->row = 8; //D
-		*all_treasures[11]->col = 5;
-		all_treasures[11]->symbol = 'D';
-		all_treasures[11]->value = 200;
-		all_treasures[11]->size = 4;
-
-		*all_treasures[12]->name = "Diamond Vault";
-		*all_treasures[12]->row = 8; //D
-		*all_treasures[12]->col = 6;
-		all_treasures[12]->symbol = 'D';
-		all_treasures[12]->value = 200;
-		all_treasures[12]->size = 4;
-
-		*all_treasures[13]->name = "Trap";
-		*all_treasures[13]->row = 1; //T
-		*all_treasures[13]->col = 6;
-		all_treasures[13]->symbol = 'T';
-		all_treasures[13]->value = -50;
-		all_treasures[13]->size = 1;
-
-		*all_treasures[14]->name = "Trap";
-		*all_treasures[14]->row = 3; //T
-		*all_treasures[14]->col = 1;
-		all_treasures[14]->symbol = 'T';
-		all_treasures[14]->value = -50;
-		all_treasures[14]->size = 1;
-
-		*all_treasures[15]->name = "Trap";
-		*all_treasures[15]->row = 5; //T
-		*all_treasures[15]->col = 4;
-		all_treasures[15]->symbol = 'T';
-		all_treasures[15]->value = -50;
-		all_treasures[15]->size = 1;
+		*all_treasures[6]->name = "Trap";
+		all_treasures[6]->row[0] = 5; //T
+		all_treasures[6]->col[0] = 4;
+		all_treasures[6]->symbol = 'T';
+		all_treasures[6]->value = -50;
+		all_treasures[6]->size = 1;
 
 		//put treasure in map
 
 		for (int i = 0; i < 16; i ++){
 
-			map[*all_treasures[i]->row][*all_treasures[i]->col]->symbol = all_treasures[i]->symbol;
-			*map[*all_treasures[i]->row][*all_treasures[i]->col]->name = all_treasures[i]->name;
-			map[*all_treasures[i]->row][*all_treasures[i]->col]->value = all_treasures[i]->value;
-			*map[*all_treasures[i]->row][*all_treasures[i]->col]->row = all_treasures[i]->row;
-			*map[*all_treasures[i]->row][*all_treasures[i]->col]->col= all_treasures[i]->col;
-			map[*all_treasures[i]->row][*all_treasures[i]->col]->size = all_treasures[i]->size;
+			// map[*all_treasures[i]->row][*all_treasures[i]->col]->symbol = all_treasures[i]->symbol;
+			// *map[*all_treasures[i]->row][*all_treasures[i]->col]->name = all_treasures[i]->name;
+			// map[*all_treasures[i]->row][*all_treasures[i]->col]->value = all_treasures[i]->value;
+			// *map[*all_treasures[i]->row][*all_treasures[i]->col]->row = all_treasures[i]->row;
+			// *map[*all_treasures[i]->row][*all_treasures[i]->col]->col= all_treasures[i]->col;
+			// map[*all_treasures[i]->row][*all_treasures[i]->col]->size = all_treasures[i]->size;
 
 		}
 
 	}
 	else if (num == 2){ //map 2
 
+		//making entire map empty first
+		for(int i = 0; i < 10; i ++){
+
+			for (int j = 0; j < 10; j ++){
+
+				// *map[i][j]->name = "Empty";
+				// map[i][j]->symbol = '.'; // empty
+				// *map[i][j]->row = i;
+				// *map[i][j]->col = j;
+				// map[i][j]->value = 0;
+
+			}
+
+		}
+
+		*all_treasures[0]->name = "Golden Idol";
+		all_treasures[0]->row[0] = 6; //G
+		all_treasures[0]->col[0] = 1;
+		all_treasures[0]->row[1] = 7;
+		all_treasures[0]->col[1] = 1;
+		all_treasures[0]->symbol = 'G';
+		all_treasures[0]->value = 100;
+		all_treasures[0]->size = 2;
+
+		*all_treasures[1]->name = "Silver Chest";
+		all_treasures[1]->row[0] = 3; //S
+		all_treasures[1]->col[0] = 2;
+		all_treasures[1]->row[1] = 3;
+		all_treasures[1]->col[1] = 3;
+		all_treasures[1]->row[2] = 3;
+		all_treasures[1]->col[2] = 4;
+		all_treasures[1]->symbol = 'S';
+		all_treasures[1]->value = 150;
+		all_treasures[1]->size = 3;
+
+		*all_treasures[2]->name = "Ancient Artifact";
+		all_treasures[2]->row[0] = 8; //A
+		all_treasures[2]->col[0] = 6;
+		all_treasures[2]->row[1] = 8;
+		all_treasures[2]->col[1] = 7;
+		all_treasures[2]->row[2] = 8;
+		all_treasures[2]->col[2] = 8;
+		all_treasures[2]->row[3] = 8;
+		all_treasures[2]->col[3] = 9;
+		all_treasures[2]->symbol = 'A';
+		all_treasures[2]->value = 200;
+		all_treasures[2]->size = 4;
+
+		*all_treasures[3]->name = "Diamond Vault";
+		all_treasures[3]->row[0] = 6; //D
+		all_treasures[3]->col[0] = 5;
+		all_treasures[3]->row[1] = 7;
+		all_treasures[3]->col[1] = 5;
+		all_treasures[3]->row[2] = 8;
+		all_treasures[3]->col[2] = 5;
+		all_treasures[3]->row[3] = 9;
+		all_treasures[3]->col[3] = 5;
+		all_treasures[3]->symbol = 'D';
+		all_treasures[3]->value = 200;
+		all_treasures[3]->size = 4;
+
+		*all_treasures[4]->name = "Trap";
+		all_treasures[4]->row[0] = 3; //T
+		all_treasures[4]->col[0] = 1;
+		all_treasures[4]->symbol = 'T';
+		all_treasures[4]->value = -50;
+		all_treasures[4]->size = 1;
+
+		*all_treasures[5]->name = "Trap";
+		all_treasures[5]->row[0] = 1; //T
+		all_treasures[5]->col[0] = 7;
+		all_treasures[5]->symbol = 'T';
+		all_treasures[5]->value = -50;
+		all_treasures[5]->size = 1;
+
+		*all_treasures[6]->name = "Trap";
+		all_treasures[6]->row[0] = 5; //T
+		all_treasures[6]->col[0] = 5;
+		all_treasures[6]->symbol = 'T';
+		all_treasures[6]->value = -50;
+		all_treasures[6]->size = 1;
+
+		//put treasure in map
+
+		for (int i = 0; i < 16; i ++){
+
+			// map[*all_treasures[i]->row][*all_treasures[i]->col]->symbol = all_treasures[i]->symbol;
+			// *map[*all_treasures[i]->row][*all_treasures[i]->col]->name = all_treasures[i]->name;
+			// map[*all_treasures[i]->row][*all_treasures[i]->col]->value = all_treasures[i]->value;
+			// *map[*all_treasures[i]->row][*all_treasures[i]->col]->row = all_treasures[i]->row;
+			// *map[*all_treasures[i]->row][*all_treasures[i]->col]->col= all_treasures[i]->col;
+			// map[*all_treasures[i]->row][*all_treasures[i]->col]->size = all_treasures[i]->size;
+
+		}
 
 
 	}
 	else if (num == 3){ //map 3
 
+		//making entire map empty first
+		for(int i = 0; i < 10; i ++){
+
+			for (int j = 0; j < 10; j ++){
+
+				// *map[i][j]->name = "Empty";
+				// map[i][j]->symbol = '.'; // empty
+				// *map[i][j]->row = i;
+				// *map[i][j]->col = j;
+				// map[i][j]->value = 0;
+
+			}
+
+		}
+
+		*all_treasures[0]->name = "Golden Idol";
+		all_treasures[0]->row[0] = 0; //G
+		all_treasures[0]->col[0] = 9;
+		all_treasures[0]->row[1] = 1;
+		all_treasures[0]->col[1] = 9;
+		all_treasures[0]->symbol = 'G';
+		all_treasures[0]->value = 100;
+		all_treasures[0]->size = 2;
+
+		*all_treasures[1]->name = "Silver Chest";
+		all_treasures[1]->row[0] = 5; //S
+		all_treasures[1]->col[0] = 1;
+		all_treasures[1]->row[1] = 6;
+		all_treasures[1]->col[1] = 1;
+		all_treasures[1]->row[2] = 7;
+		all_treasures[1]->col[2] = 1;
+		all_treasures[1]->symbol = 'S';
+		all_treasures[1]->value = 150;
+		all_treasures[1]->size = 3;
+
+		*all_treasures[2]->name = "Ancient Artifact";
+		all_treasures[2]->row[0] = 6; //A
+		all_treasures[2]->col[0] = 5;
+		all_treasures[2]->row[1] = 7;
+		all_treasures[2]->col[1] = 5;
+		all_treasures[2]->row[2] = 8;
+		all_treasures[2]->col[2] = 5;
+		all_treasures[2]->row[3] = 9;
+		all_treasures[2]->col[3] = 5;
+		all_treasures[2]->symbol = 'A';
+		all_treasures[2]->value = 200;
+		all_treasures[2]->size = 4;
+
+		*all_treasures[3]->name = "Diamond Vault";
+		all_treasures[3]->row[0] = 2; //D
+		all_treasures[3]->col[0] = 3;
+		all_treasures[3]->row[1] = 2;
+		all_treasures[3]->col[1] = 4;
+		all_treasures[3]->row[2] = 2;
+		all_treasures[3]->col[2] = 5;
+		all_treasures[3]->row[3] = 2;
+		all_treasures[3]->col[3] = 6;
+		all_treasures[3]->symbol = 'D';
+		all_treasures[3]->value = 200;
+		all_treasures[3]->size = 4;
+
+		*all_treasures[4]->name = "Trap";
+		all_treasures[4]->row[0] = 8; //T
+		all_treasures[4]->col[0] = 4;
+		all_treasures[4]->symbol = 'T';
+		all_treasures[4]->value = -50;
+		all_treasures[4]->size = 1;
+
+		*all_treasures[5]->name = "Trap";
+		all_treasures[5]->row[0] = 2; //T
+		all_treasures[5]->col[0] = 1;
+		all_treasures[5]->symbol = 'T';
+		all_treasures[5]->value = -50;
+		all_treasures[5]->size = 1;
+
+		*all_treasures[6]->name = "Trap";
+		all_treasures[6]->row[0] = 3; //T
+		all_treasures[6]->col[0] = 8;
+		all_treasures[6]->symbol = 'T';
+		all_treasures[6]->value = -50;
+		all_treasures[6]->size = 1;
+
+		//put treasure in map
+
+		for (int i = 0; i < 16; i ++){
+
+			// map[*all_treasures[i]->row][*all_treasures[i]->col]->symbol = all_treasures[i]->symbol;
+			// *map[*all_treasures[i]->row][*all_treasures[i]->col]->name = all_treasures[i]->name;
+			// map[*all_treasures[i]->row][*all_treasures[i]->col]->value = all_treasures[i]->value;
+			// *map[*all_treasures[i]->row][*all_treasures[i]->col]->row = all_treasures[i]->row;
+			// *map[*all_treasures[i]->row][*all_treasures[i]->col]->col= all_treasures[i]->col;
+			// map[*all_treasures[i]->row][*all_treasures[i]->col]->size = all_treasures[i]->size;
+
+		}
 
 
 	}
 	else { //randomly generate map
+
+		/* NEEDS FIXING DUE TO MISUNDERSTANDING ABOUT ROW AND COL */
+		/* ALSO THE LOGIC IS JUST WRONG */
 
 		//random coords from 0 to 9
 		int rand_x = 0, rand_y = 0;
@@ -724,22 +886,56 @@ void generate_map (int num, Treasure* map[10][10], Treasure* all_treasures[16]){
 	}
 
 }
-void discover_coordinate (int x, int y, Treasure map[10][10], int* valid){ //makes valid 0 or 1 to show if the coords were accepted
+
+void activate_empty(int x, int y, Treasure* discovered_map[10][10], int* score, int* moves){
+
+	printf("Nothing found!\n");
+
+	*discovered_map[x][y]->name = "Empty";
+	*discovered_map[x][y]->row = x; // .
+	*discovered_map[x][y]->col = y;
+	discovered_map[x][y]->symbol = '.';
+	discovered_map[x][y]->value = 0;
+	discovered_map[x][y]->size = 1;
+
+
+	moves --;
+
+	printf("Score: %d", score);
+	printf("Moves remaining: %d", moves);
+
+}
+
+void discover_coordinate (int x, int y, Treasure* full_map[10][10], Treasure* undiscovered_map[10][10], Treasure* all_treasures[15], Treasure* undiscovered_treasures[15], int* valid, int* score, int* moves){ 
 
 
 
-	if(map[x][y].symbol != 'O'){ //if the coordinate is undiscovered
+	if(undiscovered_map[x][y]->symbol != 'O'){ //if the coordinate is undiscovered
 
+		if(full_map[x][y]->symbol == 'T'){
 
+			activate_trap(x,y,&full_map,&undiscovered_map,&all_treasures,&undiscovered_treasures,&score,&moves);
 
-		*valid = 1;
+		}
+		else if (full_map[x][y]->symbol == '.'){
+
+			activate_empty(x, y, &undiscovered_map, &score, &moves);
+
+		}
+		else{
+
+			activate_treasure(); //INCOMPLETE
+
+		}
+
+		*valid = 1; //makes valid 0 or 1 to show if the coords were accepted
 
 	}
 	else {
 
 		printf("This location is already entered\n");
 
-		*valid = 0;
+		*valid = 0; //makes valid 0 or 1 to show if the coords were accepted
 
 	}
 
@@ -748,7 +944,7 @@ void discover_coordinate (int x, int y, Treasure map[10][10], int* valid){ //mak
 /*general function arg order*/
 /*coords (x, y), full map, discovered map, treasure arrays, modified values, const values*/
 
-void activate_trap (int x, int y, Treasure* full_map[10][10], Treasure* discovered_map[10][10], Treasure* all_treasures[], Treasure* discovered_treasures[], int* score){
+void activate_trap (int x, int y, Treasure* full_map[10][10], Treasure* discovered_map[10][10], Treasure* all_treasures[], Treasure* discovered_treasures[], int* score, int* moves){
 
 	if (full_map[x][y]->symbol == 'T'){
 
@@ -796,6 +992,7 @@ void activate_trap (int x, int y, Treasure* full_map[10][10], Treasure* discover
 
 		*score -= 50;
 		discovered_map[x][y]->discoveredCells ++;
+		*moves --;
 
 	}
 
